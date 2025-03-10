@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
-use App\Http\Controllers\LoginController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DashboardController;
 /*
 |--------------------------------------------------------------------------
@@ -16,7 +16,8 @@ use App\Http\Controllers\DashboardController;
 */
 
 //INDEX
-Route::get('/', [LoginController::class, 'index'])->middleware('guest');
+// Route::get('/', [LoginController::class, 'index'])->middleware('guest');
+Route::get('/', function () {return view('welcome');});
 
 //AUTH MANUAL
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
