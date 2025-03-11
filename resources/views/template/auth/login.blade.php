@@ -69,19 +69,34 @@
                             </a>
                         </div>
                         <!-- /Logo -->
-                        <h4 class="mb-2">Welcome to Sneat! 👋</h4>
+                        <h4 class="mb-2">Welcome to Name Your Web! 👋</h4>
                         <p class="mb-4">Please sign-in to your account and start the adventure</p>
+
+                        @if (session('error'))
+                            <div class="alert alert-danger alert-dismissible" role="alert">
+                                <ul class="mb-0">
+                                    @foreach (session('error') as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        @elseif(session('message'))
+                            <div class="alert alert-success alert-dismissible" role="alert">
+                                {{ session('message') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        @endif
 
                         <form id="formAuthentication" class="mb-3" action="index.html" method="POST">
                             <div class="mb-3">
-                                <label for="email" class="form-label">Email or Username</label>
+                                <label for="email" class="form-label">Email</label>
                                 <input
                                 type="text"
                                 class="form-control"
                                 id="email"
                                 name="email-username"
-                                placeholder="Enter your email or username"
-                                autofocus
+                                placeholder="Enter your email"
                                 />
                             </div>
                             <div class="mb-3 form-password-toggle">

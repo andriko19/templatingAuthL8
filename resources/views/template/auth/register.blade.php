@@ -52,15 +52,37 @@
                         <h4 class="mb-2">Starts here register now 🚀</h4>
                         <p class="mb-4">Make your app management easy and fun!</p>
 
-                        <form id="formAuthentication" class="mb-3" action="index.html" method="POST">
+                        @if (session('error'))
+                            <div class="alert alert-danger alert-dismissible" role="alert">
+                                <ul class="mb-0">
+                                    @foreach (session('error') as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        @endif
+
+                        {{-- <form id="formAuthentication" class="mb-3" action="{{route('actionregister')}}" method="POST">
                             <div class="mb-3">
                                 <label for="name" class="form-label">Name</label>
-                                <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" autofocus/>
+                                <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name"/>
+                                <div class="valid-feedback">Valid.</div>
+                                <div class="invalid-feedback">Please fill out this field.</div>
                             </div>
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
                                 <input type="text" class="form-control" id="email" name="email" placeholder="Enter your email" />
                             </div>
+                            <div class="mb-3">
+                                <label for="role" class="form-label">Role</label>
+                                <select class="form-select" id="role" name="role" aria-label="Default select example">
+                                  <option selected>-- Open this select role --</option>
+                                  <option value="SuperAdmin">Super Admin</option>
+                                  <option value="Administrator">Administrator</option>
+                                  <option value="Visitor">Visitor</option>
+                                </select>
+                              </div>
                             <div class="mb-3 form-password-toggle">
                                 <label class="form-label" for="password">Password</label>
                                 <div class="input-group input-group-merge">
@@ -85,7 +107,59 @@
                                 </div>
                             </div>
                             <button class="btn btn-primary d-grid w-100">Sign up</button>
+                        </form> --}}
+
+                        <form id="formAuthentication" class="mb-3" action="{{ route('actionregister') }}" method="POST">
+                            @csrf <!-- Tambahkan token CSRF untuk keamanan -->
+
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" placeholder="Enter your name"/>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="text" class="form-control" id="email" name="email" value="{{ old('email') }}" placeholder="Enter your email" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="role" class="form-label">Role</label>
+                                <select class="form-select" id="role" name="role">
+                                    <option value="0" {{ old('role') == '' ? 'selected' : '' }}>-- Open this select role --</option>
+                                    <option value="SuperAdmin" {{ old('role') == 'SuperAdmin' ? 'selected' : '' }}>Super Admin</option>
+                                    <option value="Administrator" {{ old('role') == 'Administrator' ? 'selected' : '' }}>Administrator</option>
+                                    <option value="Visitor" {{ old('role') == 'Visitor' ? 'selected' : '' }}>Visitor</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3 form-password-toggle">
+                                <label class="form-label" for="password">Password</label>
+                                <div class="input-group input-group-merge">
+                                    <input type="password" id="password" class="form-control" name="password" placeholder="••••••••••" />
+                                    <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3 form-password-toggle">
+                                <label class="form-label" for="confirm_password">Confirm Password</label>
+                                <div class="input-group input-group-merge">
+                                    <input type="password" id="confirm_password" class="form-control" name="confirm_password" placeholder="••••••••••" />
+                                    <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="terms-conditions" name="terms" {{ old('terms') ? 'checked' : '' }} />
+                                    <label class="form-check-label" for="terms-conditions">
+                                        I agree to <a href="javascript:void(0);">privacy policy & terms</a>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-primary d-grid w-100">Sign up</button>
                         </form>
+
 
                         <p class="text-center">
                             <span>Already have an account?</span>
