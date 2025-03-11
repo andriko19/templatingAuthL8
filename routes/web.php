@@ -20,6 +20,8 @@ use App\Http\Controllers\DashboardController;
 Route::get('/', function () {return view('welcome');});
 
 //AUTH MANUAL
+Route::get('/register', [RegisterController::class, 'index'])->name('register')->middleware('guest');
+// Route::post('/register', [RegisterController::class, 'authenticate'])->name('login')->middleware('guest');
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
 Route::post('/login', [LoginController::class, 'authenticate'])->name('login')->middleware('guest');
 Route::match(['get','post'],'/logout', [LoginController::class, 'logout'])->name('logout');
