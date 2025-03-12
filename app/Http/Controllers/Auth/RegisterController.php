@@ -13,7 +13,7 @@ class RegisterController extends Controller
 {
     public function index()
     {
-        return view('template.auth.register');
+        return view('page.auth.register');
     }
 
     public function actionRegister(Request $request)
