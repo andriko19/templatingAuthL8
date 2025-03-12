@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use Validator;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class LoginController extends Controller
 {
@@ -17,69 +20,46 @@ class LoginController extends Controller
         return view('template.auth.login');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function authenticate(Request $request)
     {
-        //
+        $messages = [
+            'required' => 'Tidak boleh kosong',
+            'min' => 'Password minimal 6 karakter',
+            'max' => 'Attribute harus diisi maksimal :max karakter ya cuy!!!',
+            'email' => 'Harus format email',
+        ];
+
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|max:255',
+            'password' => 'required|min:6|max:255'
+        ], $messages);
+
+        // Cek jika validasi gagal
+        if ($validator->fails()) {
+            Session::flash('error', $validator->errors()->all());
+            return back()->withInput(); // Kembali ke form dengan input yang sudah diisi
+        } else {
+            //jika lolos validasi
+            $data = [
+                'email' => $request->input('email'),
+                'password' => $request->input('password'),
+            ];
+
+            if (Auth::Attempt($data)) {
+                return redirect('dashboard');
+            }else{
+                Session::flash('error', ['Email atau Password Salah']);
+                return back()->withInput(); // Kembali ke form dengan input yang sudah diisi
+            }
+        }
+
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function logout(Request $request)
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/');
     }
 }
